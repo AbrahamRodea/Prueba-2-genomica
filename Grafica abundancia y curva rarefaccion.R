@@ -48,7 +48,7 @@ Datos_rarefaccion <- bind_rows(lapply(seq_along(rarefaccion), function(i) { #la 
 }))
 
 # Graficar con ggplot2
-ggplot(Datos_rarefaccion, aes(x = Tamaño, y = Especies, color = Poblacion)) +
+Curva_rarefaccion<-ggplot(Datos_rarefaccion, aes(x = Tamaño, y = Especies, color = Poblacion)) +
   geom_line(size = 1) +
   theme_minimal() +
   labs(title = "Curva de Rarefacción",
@@ -56,4 +56,4 @@ ggplot(Datos_rarefaccion, aes(x = Tamaño, y = Especies, color = Poblacion)) +
        y = "Número de Especies") +
   scale_color_manual(values = colores2) 
 
-
+Curva_rarefaccion
