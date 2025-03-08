@@ -19,7 +19,7 @@ barplot(sort(Suma_pa_grafica, decreasing = TRUE), col=colores1,
 
 #Curva de rarefaccion
 #Instalamos y cargamos el paquete vegan, el cual
-#tiene una funcion para hacer una cura de rarefaccion
+#tiene una funcion para hacer una curva de rarefaccion
 install.packages("vegan")  
 library(vegan)
 #colores para diferenciar lineas
