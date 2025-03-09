@@ -106,3 +106,80 @@ Jaccard()
 
 ###############################
 
+############################################## Bray - curtis ######################################
+
+# Rescatamos parte del codigo Jaccard para comparar la intersección entre las dos poblaciones seleccionadas
+
+# Debido a que el indice Bray-Curtis si requiere de abundancias en este caso la base de datos no será modificada 
+
+Datos<-read.csv("Datos/Abundancias por especie.csv") # Cargamos nuestra base de datos 
+
+ea<-0# El objeto "ea" almacenara la suma de los valores minimos de abundancia entre cada poblacion 
+
+for (c in 2:ncol(Datos)) { # c determina el rango de los elementos de cada conjunto (fila del data frame) que seran comparados, este numero dependerá de los datos del usuario 
+  
+  if (Datos[1, c] > 0 & Datos[2, c] > 0) { # En este caso queremos identificar todas aquellas posiciones en las que ambas poblaciones tienen presencia de la misma especie 
+    
+    # Cualquier valor mayor a 0 indica presencia de especies, se usa el conector logico & debido a que ambas poblaciones deben cumplir la condicion de tener abundancia de dicha especie
+    
+    # Se uso ">" en lugar de "!=" debido a que en el caso de "!=" si al hacer la base de datos el usuario coloca por error un valor negativo este cumpliria la condicion "!= 0", esto alteraria el resultado 
+    
+    ea <- ea + min(Datos[1, c], Datos[2, c]) # Usamos min para seleccionar el numero más chico en c posicion de cada vector 
+  }
+}
+
+print(ea)
+
+################# Creamos objetos Si e Sj 
+
+si<<-sum(Datos[a,2:length(Datos)]) # Determinamos las columnas usando el numero de columnas de la base de datos
+
+sj<<-sum(Datos[b,2:length(Datos)]) # Partimos del 2 debido a que el 1 corresponde al ID 
+
+########## Indice Bray- Curtis ############
+
+indicebc<- 1 - ((2 * (ea)) / (si + sj))
+
+
+
+
+################################# Creamos la funcion ###########################
+
+TablaBC<-data.frame(Especie_A = integer() , Especie_B = integer(), Indice_Bray_Curtis = numeric()) # Al igual que con Jaccard creamos una tabla que guarde nuestras comparaciones 
+
+Bray_curtis<-function(x,y){
+  
+  a<<- as.numeric (readline (prompt = "Coloca el numero de fila en tu dataframe de tu primera poblacion: ")) # De esta forma el usuario elige que poblaciones desea comparar 
+  
+  b<<- as.numeric (readline (prompt = "Coloca el numero de fila en tu dataframe de tu segunda poblacion: "))
+  
+  ea<-0
+  
+  for (c in 2:ncol(Datos)) {
+    
+    if (Datos[a, c] > 0 & Datos[b, c] > 0) { 
+      
+      ea <- ea + min(Datos[a, c], Datos[b, c]) 
+      
+    }
+  } 
+  
+  si<<-sum(Datos[a,2:length(Datos)])
+  
+  sj<<-sum(Datos[b,2:length(Datos)])
+  
+  indicebc<- 1 - ((2 * (ea)) / (si + sj))
+  
+  print(indicebc)
+  
+  comparacionbc<-data.frame(Especie_A = a , Especie_B = b, Indice_Bray_Curtis = indicebc)
+  
+  TablaBC<<-rbind(TablaBC, comparacionbc)
+  
+  View(TablaBC)
+  
+}
+
+Bray_curtis()
+
+
