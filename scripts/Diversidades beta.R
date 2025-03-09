@@ -1,130 +1,46 @@
 ############################### JACCARD ######################################
 
+#Este indice no requiere cargar ninguna libreria
+
 Datos<-read.csv("Datos/Abundancias por especie.csv") # Cargamos nuestra base de datos de abundancias de especies para cada poblacion 
 
-# Separamos nuestra base de datos en 7 poblaciones poblaciones 
+# Cambiamos nuestra matriz de abundancia a presencia-ausencia, esto es posible debido a que el indice Jaccard no considera abundancias
 
-class(Datos)
-
-datos1<-as.data.frame(Datos)
-
-class(datos1)
-
-datos1[1,2:13]
-poblaciones<-Datos
-
-poblacion1<- poblaciones[1,2:13]
-
-poblacion2<- poblaciones[2,2:13]
-
-poblacion3<- poblaciones[3,2:13]
-
-poblacion4<- poblaciones[4,2:13]
-
-poblacion5<- poblaciones[5,2:13]
-
-poblacion6<- poblaciones[6,2:13]
-
-poblacion7<- poblaciones[7,2:13]
-
-#######################################################################
-
-intersecto1<-intersect(datos1[1,2:13],datos1[2,2:13])
-
-intersecto1
-######################################################################
-
-datosb<-data.frame( poblacion1<- poblaciones[1,2:13],
+for ( n in 1:nrow(Datos)){ # n indica la fila de nuestro data.frame (se ajusta a la base de datos del usuario) 
   
-  poblacion2<- poblaciones[2,2:13],
-  
-  poblacion3<- poblaciones[3,2:13],
-  
-  poblacion4<- poblaciones[4,2:13],
-  
-  poblacion5<- poblaciones[5,2:13],
-  
-  poblacion6<- poblaciones[6,2:13],
-  
-  poblacion7<- poblaciones[7,2:13],
-)
-######################################################################
-
-############ Version funcional, asignar 1 o 0 a cada población ###############
-
-for ( i in 1:length(poblacion1)){
-  
-  if ( poblacion1[i] != 0){
+  for (p in 2:length(Datos) ){ # p indica el intervalo de elementos de la fila que serán transformados, omitimos el 1 debido a que este es el ID de la fila
     
-    poblacion1[i]<-1
+    if ( Datos[n,p] != 0 ){ # Si la celda es distinta a o quiere decir que la especie esta presente, por lo tanto se le asigna un 1
+      
+      Datos[n,p]<- 1 
+      
+    } else if ( Datos[n,p] == 0){ # Si la celda es igual a 0 quiere decir que la especie NO esta presente, por lo tanto se le asigna un 0
+      
+      Datos[n,p]<- 0
+    }
+  } 
+}  
+
+Datos 
+######### Determinar interseccion y union de los conjuntos seleccionados #######
+
+# "u" e "i" serán los elementos en los que se almacenara cada iteracion del ciclo que cumpla la condicion de cada uno de los objetos 
+# Deben estar fuera del ciclo siguiente, pues, de lo contrario esto se reinician en cada iteracion 
+
+u<-0
+i<-0
+
+for (c in 2:length(Datos)) { # c determina el rango de los elementos de cada conjunto (fila del data frame) que seran comparados, este numero dependerá de los datos del usuario
+  
+  if (Datos[1, c] == 1 & Datos[2, c] == 1) { # Determinamos la intersección por aquellos elementos que estan presentes en ambos conjuntos, por ello usamos el conector logico &, ya que ambos conjuntos deben cumplirt dicha condicion 
     
-  } else if ( poblacion1[i] == 0){
+    i <- i + 1  # Cada que un elemento cumple la condicion anterior se suma 1 al objeto de interseccion
     
-    poblacion1[i]<-0
   }
   
-  
+  if (Datos[1, c] == 1 || Datos[2, c] == 1) { # Determinamos la union como los elementos que están presentes en uno u otro conjunto, por lo tanto, usamos el conector logico "|" ya que este implica que al menos uno debe cumplir la condicion
+    
+    u <- u + 1  #Cada que un elemento cumple la condicion anterior se suma 1 al objeto de union
+    
+  }
 }
-
-
-poblacion1
-
-####################################################################################################
-
-nrow(Datos)
-
-##################### version 2 asignar cambios a todas las poblaciones ##############
-
-for ( i in 1:length(poblacion1)){
-  
-  if ( poblacion1[i] != 0){
-    
-    poblacion1[i]<-1
-    
-  } else if ( poblacion1[i] == 0){
-    
-    poblacion1[i]<-0
-  }
-###################################
-  
-  if ( poblacion2[i] != 0){
-    
-    poblacion2[i]<-1
-    
-  } else if ( poblacion2[i] == 0){
-    
-    poblacion2[i]<-0
-  }
-##################################
-  
-  if ( poblacion3[i] != 0){
-    
-    poblacion3[i]<-1
-    
-  } else if ( poblacion3[i] == 0){
-    
-    poblacion3[i]<-0
-  }
-######################################
-  
-  if ( poblacion4[i] != 0){
-    
-    poblacion4[i]<-1
-    
-  } else if ( poblacion4[i] == 0){
-    
-    poblacion4[i]<-0
-  }
-  
-  
-  
-} # El ultimo
-
-poblacion1
-poblacion2
-poblacion3
-
-jaccar
-######################################################################
-
-
