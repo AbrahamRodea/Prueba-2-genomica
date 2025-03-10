@@ -142,6 +142,7 @@ Lo primero será cargar los paquetes necesarios.
 library(vegan)
 library(readr)
 library(ggplot2)
+library(dplyr)
 ```
 
 ## Gráfica de abundancias
