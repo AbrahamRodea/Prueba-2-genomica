@@ -9,25 +9,26 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Practica 2
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## Análisis de diversidad de especies en sitios simulados
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+10/03/2025
 
-```{r cars}
-summary(cars)
-```
+Isaac Abraham Rodea Trejo
 
-## Including Plots
+### Introducción
 
-You can also embed plots, for example:
+La biodiversidad hace referencia a la variedad de organismos vivos en un espacio determinado, generalmente al hablar de diversidad se hace énfasis en la variedad de especies, sin embargo, este termino no se limita a especies, tambien existen otros tipos como la diversidad genética y química. Existe una gran variedad de índices diseñados para cuantificar la diversidad de un área o muestra determinada, sin embargo, a pesar de la gran variedad de índices ninguno de estos es capaz de englobar al completo el concepto de diversidad. Los índices de Shannon y Simpson son de los más importantes índices de diversidad. La riqueza y la abundancia son dos de los elementos más comunes en los índices de diversidad. La riqueza se refiere al numero de especies distintas encontradas en un espacio delimitado, mientras que la abundancia se refiere al numero de individuos encontrados de cada una de estas especies (Morris et al., 2014). Los índices de diversidad clásicos se sustentan en tres supuestos: I) Todas las especies son iguales y su importancia esta determinada por la abundancia de estas, II) Todos los individuos son iguales, III) Las abundancias se han obtenido usando métodos adecuados y eficientes y se han cuantificado en unidades similares. Los tres supuestos anteriores no corresponden a la realidad, pues, cada una de las especies desempeña un papel único dentro de su ecosistema, por lo tanto, no podemos afirmar que todas las especies sean iguales (Mouchet et al., 2010).
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+Estandarizar las muestras es otro paso importante, debido a que, a diferencia de otras medidas comúnmente usadas en ecología, la diversidad al ser medida de forma aleatoria está siendo medida de forma sesgada. El muestreo aleatorio no refleja las abundancias relativas de las especies, por lo que, especies raras suelen estar subrepresentadas o ausentes en dichos muestreos aleatorios (Roswell et al., 2021). Actualmente se suelen usar tres principales tipos de diversidad, alfa, beta y gamma, dichos términos fueron propuestos en 1960 por el ecólogo estadounidense Robert Whittaker (Torresani et al., 2019). La diversidad Alfa se usa para calcular la diversidad dentro de un área delimitada, esta describe la riqueza de especies dentro de dicha zona. La diversidad Beta se usa para comparar la diversidad entre dos regiones o comunidades, el índice de Sorensen suele ser el más usado para calcular este tipo de diversidad, la diversidad Gamma se usa para estimar la diversidad de grandes zonas, esta contiene a las diversidades Alfa y Beta (Andermann et al., 2022).
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+En esta practica simulamos muestreos de distintas poblaciones, las especies dentro de dichas poblaciones fueron representadas por fichas de distintos colores, cada color corresponde a una especie distinta.
+
+### Métodos
+
+El docente nos proporciono una bolsa de papel marcada con una figura en su exterior, cada bolsa representaba una población distinta. Primero realizamos un muestreo aleatorio para generar las curvas de rarefacción, en este caso decidimos que tras 5 muestreos sin registrar especies nuevas ibamos a detener el muestreo, esta descisión fue arbitraria. Una vez terminado el muestreo para la curva de rarefacción vaciamos las bolsas de papel y agrupamos las fichas por color. Contamos las fichas de cada uno de los colores presentes y anotamos el numero de fichas de dicho color presente en la bolsa, esto se realizó con al menos 7 bolsas de papel. Se generó una base de datos con la que se calcularon los indices de diversidad y gráficas en R.
+
 ## Índices Alfa
 
 Los índices alfa nos ayudan a ver la diversidad dentro de un área en particular, se relaciona con el número de especies (riqueza de especies) o por uno o más de varios índices de diversidad. Para medir el índice alfa hay muchos métodos, lo importante es interpretar los resultados cuando están variando. Alguno de los métodos que se usaron fueron:
@@ -209,17 +210,181 @@ Curva_rarefaccion<-ggplot(Datos_rarefaccion, aes(x = Tamaño, y = Especies, colo
 Curva_rarefaccion
 ```
 
+### Indices Beta 
+
+Los indices beta nos ayudan a comparar la diversidad entre dos poblaciones. En este caso generamos funciones para los indices de Jaccard y Bray-Curtis. Los indices están diseñados para adaptarse a los datos de usuario.
+
+```{r}
+################################# Funcion Jaccard  ############################
+
+TablaJaccard<-data.frame(Especie_A = integer() , Especie_B = integer(), Indice_Jaccard = numeric()) # Creamos este data frame para almacenar cada vez que se ejecute nuestra funcion 
+# El data frame debe contar con el tipo de objeto que ocupara esa posición, de lo contrario no se podrá crear 
+
+Jaccard<-function(x,y){
+  
+  a<- as.numeric (readline (prompt = "Coloca el numero de fila en tu dataframe de tu primera poblacion: ")) # De esta forma el usuario elige que poblaciones desea comparar 
+  
+  b<- as.numeric (readline (prompt = "Coloca el numero de fila en tu dataframe de tu segunda poblacion: "))
+  
+  for ( n in 1:nrow(Datos)){ 
+    
+    for (p in 2:length(Datos) ){ 
+      
+      if ( Datos[n,p] != 0 ){ 
+        
+        Datos[n,p]<- 1 
+        
+      } else if ( Datos[n,p] == 0){ 
+        
+        Datos[n,p]<- 0
+      }
+    } 
+  }
+  
+  u<-0
+  i<-0
+  
+  for (c in 2:length(Datos)) { 
+    
+    if (Datos[a, c] == 1 & Datos[b, c] == 1) { 
+      
+      i <- i + 1  
+      
+    }
+    
+    if (Datos[a, c] == 1 | Datos[b, c] == 1) { 
+      
+      u <- u + 1  
+      
+    }
+  }
+  
+  indice<- i/u
+  
+  print(indice)
+  
+  comparacion<-data.frame(Especie_A = a , Especie_B = b, Indice_Jaccard = indice)
+  
+  TablaJaccard<<-rbind(TablaJaccard, comparacion)
+  
+  View(TablaJaccard)
+  
+  print(TablaJaccard)
+  
+}
+
+Jaccard()
+```
+
+```{r}
+##################  Funcion Bray-Curtis  #####################
+
+TablaBC<-data.frame(Especie_A = integer() , Especie_B = integer(), Indice_Bray_Curtis = numeric()) # Al igual que con Jaccard creamos una tabla que guarde nuestras comparaciones 
+
+Bray_curtis<-function(x,y){
+  
+  a<<- as.numeric (readline (prompt = "Coloca el numero de fila en tu dataframe de tu primera poblacion: ")) # De esta forma el usuario elige que poblaciones desea comparar 
+  
+  b<<- as.numeric (readline (prompt = "Coloca el numero de fila en tu dataframe de tu segunda poblacion: "))
+  
+  ea<-0
+  
+  for (c in 2:ncol(Datos)) {
+    
+    if (Datos[a, c] > 0 & Datos[b, c] > 0) { 
+      
+      ea <- ea + min(Datos[a, c], Datos[b, c]) 
+      
+    }
+  } 
+  
+  si<<-sum(Datos[a,2:length(Datos)])
+  
+  sj<<-sum(Datos[b,2:length(Datos)])
+  
+  indicebc<- 1 - ((2 * (ea)) / (si + sj))
+  
+  print(indicebc)
+  
+  comparacionbc<-data.frame(Especie_A = a , Especie_B = b, Indice_Bray_Curtis = indicebc)
+  
+  TablaBC<<-rbind(TablaBC, comparacionbc)
+  
+  View(TablaBC)
+  
+  print(TablaBC)
+  
+}
+
+Bray_curtis()
+```
+
 ## Preguntas
 
-1.  ¿Cómo varían los valores de los índices entre los sitios? ¿Qué diferencias resaltan? Los índices nos muestran que las poblaciones P3 y P5 tienen baja diversidad y equitatividad, en cambio P6 y P7 tiene mayor diversidad y equitatividad.
-2.  ¿Cuál índice es más sensible a especies raras? Es el índice de Chao ya que este nos sirve para estimar riquezas de especies incluyendo aquellas que no se observan en el muestreom en donde utiliza a los singltons y doubletons para hacer esta estimación, y est eíndice aumenta cuando hay más especies raras.
+1.  ¿Cómo varían los valores de los índices entre los sitios? ¿Qué diferencias resaltan?
+
+    Los índices nos muestran que las poblaciones P3 y P5 tienen baja diversidad y equitatividad, en cambio P6 y P7 tiene mayor diversidad y equitatividad.
+
+2.  ¿Cuál índice es más sensible a especies raras?
+
+    Es el índice de Chao ya que este nos sirve para estimar riquezas de especies incluyendo aquellas que no se observan en el muestreom en donde utiliza a los singltons y doubletons para hacer esta estimación, y est eíndice aumenta cuando hay más especies raras.
+
 3.  ¿Por qué el índice de Pielou nos da información sobre la equitatividad de la comunidad? Porque este nos dice que si todas tienen la misma abundancia el índice será de 1 que es mayor equitatividad, si es cercano a 0 hayt baja equitatividad, donde una especie domina y las demás son raras. En nuestras poblaciones podemos ver que P3 y P5 solo hay una especie que domina, entonces el índice es cercano a 0, pero las poblaciones P6 y P7 hay una distribución más equitativa.
-4.  ¿Cuál sitio parece tener mayor diversidad según la curva de rarefacción? la poblacion 6 y 7¿Por que sus curvas son más altas que las demás, siendo que se detectó un mayor número de especies en dichas poblaciones.
-5.  ¿Cómo afecta el tamaño de la muestra en la forma de la curva? En que a mayor población es más probable encontrar diversas especies, por lo que la curva sería más alta y grande; sin embargo, hay casos en los que una población grande contiene puros individuos de la misma especie.
-6.  ¿Cuál de estos índices es más sensible a la diferencia en abundancias? Sería el índice de Gini ya que este mide desigualdades entre la distribución de abundancias de especie, si una o pocas especeis son dominantes en una población, el ídnice es cercano a 1 pero si las abundancias están distribuidas de manera más equitativa, el índice de gini es cercano a 0. Por ejemplo nuestra población de P3 y P5 sólo domina una especie, que esto es un caso extremo.
-7.  ¿Qué interpretación ecológica tienen las diferencias entre sitios? Significa que son sitios con alta diversidad alfa, sin embargo, al comparar distintas poblaciones, se puede observar que al compartir especies, su diversidad beta sería menor.
-8.  ¿Cómo interpretas la forma de las curvas de abundancia?En que al inicio de las curvas se puede esperar una alta probabilidad de encontrar especies nuevas, por lo que su altura subiría rápidamente; sin embargo, al realizar los suficientes muestreos, las curvas se empiezan a asentar debido a la ausencia de más especies, dado por probabilidad de no haberlas muestreado o porque de verdad no hay más.
+
+4.  ¿Cuál sitio parece tener mayor diversidad según la curva de rarefacción? la poblacion 6 y 7 Por que sus curvas son más altas que las demás, siendo que se detectó un mayor número de especies en dichas poblaciones.
+
+5.  ¿Cómo afecta el tamaño de la muestra en la forma de la curva?
+
+    En que a mayor población es más probable encontrar diversas especies, por lo que la curva sería más alta y grande; sin embargo, hay casos en los que una población grande contiene puros individuos de la misma especie.
+
+6.  ¿Cuál de estos índices es más sensible a la diferencia en abundancias?
+
+    Sería el índice de Gini ya que este mide desigualdades entre la distribución de abundancias de especie, si una o pocas especeis son dominantes en una población, el ídnice es cercano a 1 pero si las abundancias están distribuidas de manera más equitativa, el índice de gini es cercano a 0. Por ejemplo nuestra población de P3 y P5 sólo domina una especie, que esto es un caso extremo.
+
+7.  ¿Qué interpretación ecológica tienen las diferencias entre sitios?
+
+    Significa que son sitios con alta diversidad alfa, sin embargo, al comparar distintas poblaciones, se puede observar que al compartir especies, su diversidad beta sería menor.
+
+8.  ¿Cómo interpretas la forma de las curvas de abundancia?
+
+    En que al inicio de las curvas se puede esperar una alta probabilidad de encontrar especies nuevas, por lo que su altura subiría rápidamente; sin embargo, al realizar los suficientes muestreos, las curvas se empiezan a asentar debido a la ausencia de más especies, dado por probabilidad de no haberlas muestreado o porque de verdad no hay más.
+
 9.  ¿Qué implicaciones tienen para la dominancia de especies?
+
+    La curva nos puede indicar la dominancia de una especie, si la curva tiene caidas abruptas esto indica que existe una especie que abunda sobre el resto. Una "curva" más plana indica que las especies abundan de forma equitativa, por lo tanto, no encontraremos una especie dominante en una poblacion con una curva con estas condiciones.
+
 10. ¿Qué patrones generales observaste en la diversidad entre los sitios?
+
+    Encontré que aquellos sitios con la curva de rarefacción mas pequeña (3 y 5) obtuvieron valores extremos en los distintos indices (1,0,NA,Inf), esto producto de la dominancia absoluta. El resto de los sitios con curvas más largas obtuvieron valores distintos a los anteriormente mencionados. Resulta interesante como en indices como Jaccard dos poblaciones son practicamente identicas (6 y 7) mientras que en el indice Bray-Curtis las mismas poblaciones son distintas, es un excelente ejemplo de las diferencias entre indices. Estas diferencias podrían ayudarnos a elegir un indice y descartar otro.
+
 11. ¿Cuál índice te pareció más útil y por qué?
-12. ¿Cómo podrías aplicar este análisis en estudios ecológicos reales? En que al analizar comunidades se pueden aplicar los mismos procedimientos realizados para encontrar sus diversidades, gráfica y curvas, lo que nos proporcionaría datos reales de cómo es que esa comunidad está compuesta.
+
+    En los personal me quedo con los indices de Bray-Curtis y Simpson2, esto debido a gracias a su estructura ninguno arroja valores de Inf u NA. Además ambos arrojan datos sencillos de interpretar, pues se manejan en intervalos del 0-1, donde cada extremo tiene un significado determinado. Ambos consideran riquezas y abundancias lo que los hace utiles para calcular diversidades. El indice que me parecio menos util fue el de Chao1, pues, su resultado es muy distinto al resto de indices.
+
+12. ¿Cómo podrías aplicar este análisis en estudios ecológicos reales?
+
+    En que al analizar comunidades se pueden aplicar los mismos procedimientos realizados para encontrar sus diversidades, gráfica y curvas, lo que nos proporcionaría datos reales de cómo es que esa comunidad está compuesta.
+
+### Discusión 
+
+En esta práctica aprendí a escribir codigo en R para calcular distintos indices de diversidad, la simulación de un muestreo en poblaciones resultó bastante util para comprender como funciona cada indice. Al comparar los resultados entre distintos indices de las mismas poblaciones se pueden apreciar las diferencias entre los mismos. En lo personal la diferencia que más note fue aquella entre le indice de Jaccard y el de Bray-Curtis, puesto que el primero iguala dos poblaciones debido a que tienen el mismo valor de riqueza. Si alguien observa esto sin conocer como funciona el indice podría pensar que las poblaciones 6 y 7 son iguales cuando en realidad estos es falso. Comprender como funcionan los indices así como los datos que utilizan es vital para poder compren los resultados que arrojan y determinar en que situción debemos usar uno u otro indice.
+
+Para realizar el código de la presente práctica se consultaron diversos foros de R
+
+Trabajo del equipo
+
+Introducción e indices beta \<- Isaac Abraham Rodea Trejo
+
+Discusión y preguntas\<- Isaac Abraham Rodea Trejo,
+
+### Bibliografía
+
+Andermann, T., Antonelli, A., Barrett, R. L., & Silvestro, D. (2022). Estimating Alpha, Beta, and Gamma Diversity Through Deep Learning. Frontiers in Plant Science, 13. <https://doi.org/10.3389/fpls.2022.839407>
+
+Morris, E. K., Caruso, T., Buscot, F., Fischer, M., Hancock, C., Maier, T. S., Meiners, T., Müller, C., Obermaier, E., Prati, D., Socher, S. A., Sonnemann, I., Wäschke, N., Wubet, T., Wurst, S., & Rillig, M. C. (2014). Choosing and using diversity indices: Insights for ecological applications from the German Biodiversity Exploratories. Ecology and Evolution, 4(18), 3514-3524. <https://doi.org/10.1002/ece3.1155>
+
+Mouchet, M. A., Villéger, S., Mason, N. W. H., & Mouillot, D. (2010). Functional diversity measures: An overview of their redundancy and their ability to discriminate community assembly rules. Functional Ecology, 24(4), 867-876. <https://doi.org/10.1111/j.1365-2435.2010.01695.x>
+
+Roswell, M., Dushoff, J., & Winfree, R. (2021). A conceptual guide to measuring species diversity. Oikos, 130(3), 321-338. <https://doi.org/10.1111/oik.07202>
+
+Torresani, M., Rocchini, D., Sonnenschein, R., Zebisch, M., Marcantonio, M., Ricotta, C., & Tonon, G. (2019). Estimating tree species diversity from space in an alpine conifer forest: The Rao’s Q diversity index meets the spectral variation hypothesis. Ecological Informatics, 52, 26-34. <https://doi.org/10.1016/j.ecoinf.2019.04.001>
