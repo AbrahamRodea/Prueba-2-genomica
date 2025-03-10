@@ -86,10 +86,10 @@ colores2<-c("cyan","pink","orange","steelblue","green","red", "purple")
 #Generar curva de rarefaccion usando funcion de vegan para asi obtener los datos necesarios
 rarefaccion<-rarecurve(Datos_grafica_wenos, col=colores2, label=FALSE)
 
-#hacer dataframe con los datos obtenidos de vegan
+#hacer dataframe con los datos obtenidos de vegan, usando bindrow para juntar los datos y que ggplot pueda usarlos
 Datos_rarefaccion <- bind_rows(lapply(seq_along(rarefaccion), function(i) { #la secuencia genera tantos valores de rarefaccion como datos haya
   data.frame(Tamaño = attr(rarefaccion[[i]], "Subsample"),                #mientras que la funcion se encargara de asignarle un numero a cada dato generado
-             Especies = rarefaccion[[i]],                                   #attr se encarga de extraer y asignar los valores a cada dato de rarefaccion desde la funcion rarecurve
+             Especies = rarefaccion[[i]],                                   #attr se encarga de extraer y asignar los valores(subsample) a cada dato de rarefaccion desde la funcion rarecurve
              Poblacion = paste("Población", i))                     #se le asigna una etiqueta a cada poblacion, dependiendo del numero de datos
 }))
 
