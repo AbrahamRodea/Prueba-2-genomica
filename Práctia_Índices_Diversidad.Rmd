@@ -104,3 +104,18 @@ Curva_rarefaccion<-ggplot(Datos_rarefaccion, aes(x = Tamaño, y = Especies, colo
 
 Curva_rarefaccion
 ```
+
+## Preguntas
+
+1.  ¿Cómo varían los valores de los índices entre los sitios? ¿Qué diferencias resaltan?
+2.  ¿Cuál índice es más sensible a especies raras?
+3.  ¿Por qué el índice de Pielou nos da información sobre la equitatividad de la comunidad?
+4.  ¿Cuál sitio parece tener mayor diversidad según la curva de rarefacción? la poblacion 6 y 7¿Por que sus curvas son más altas que las demás, siendo que se detectó un mayor número de especies en dichas poblaciones.
+5.  ¿Cómo afecta el tamaño de la muestra en la forma de la curva? En que a mayor población es más probable encontrar diversas especies, por lo que la curva sería más alta y grande; sin embargo, hay casos en los que una población grande contiene puros individuos de la misma especie.
+6.  ¿Cuál de estos índices es más sensible a la diferencia en abundancias?
+7.  ¿Qué interpretación ecológica tienen las diferencias entre sitios? Significa que son sitios con alta diversidad alfa; sin embargo, al comparar distintas poblaciones, se puede observar que al compartir especies, su diversidad beta sería menor.
+8.  ¿Cómo interpretas la forma de las curvas de abundancia?En que al inicio de las curvas se puede esperar una alta probabilidad de encontrar especies nuevas, por lo que su altura subiría rápidamente; sin embargo, al realizar los suficientes muestreos, las curvas se empiezan a asentar debido a la ausencia de más especies, dado por probabilidad de no haberlas muestreado o porque de verdad no hay más.
+9.  ¿Qué implicaciones tienen para la dominancia de especies?
+10. ¿Qué patrones generales observaste en la diversidad entre los sitios?
+11. ¿Cuál índice te pareció más útil y por qué?
+12. ¿Cómo podrías aplicar este análisis en estudios ecológicos reales? En que al analizar comunidades se pueden aplicar los mismos procedimientos realizados para encontrar sus diversidades, gráfica y curvas, lo que nos proporcionaría datos reales de cómo es que esa comunidad está compuesta.
