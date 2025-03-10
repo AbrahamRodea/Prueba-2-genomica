@@ -28,6 +28,110 @@ plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Índices Alfa
+
+Los índices alfa nos ayudan a ver la diversidad dentro de un área en particular, se relaciona con el número de especies (riqueza de especies) o por uno o más de varios índices de diversidad. Para medir el índice alfa hay muchos métodos, lo importante es interpretar los resultados cuando están variando. Alguno de los métodos que se usaron fueron:
+
+1.  Índice de Shannon
+
+2.  Índice de Pielou
+
+3.  Índice de Simpson y el Inverso
+
+4.  Índice de Chao1
+
+5.  Índice de Gini
+
+Se enlistan las pruebas que utilizamos con su código correspondiente, explicando en el índice de Shannon la función del código que se aplicó en todos.
+
+```{r indices}
+#Leémos los datos de la tabla
+datos_poblacion <- read.csv("Datos/Abundancias por especie.csv")
+datos_poblacion
+
+
+#Cálculo de índices de Shannon de todas las poblaciones
+
+shannonH <- function(x) { 
+  x <- x[x > 0]  
+  p <- x / sum(x)  
+  return(-sum(p * log(p)))
+}
+
+# Aplicar la función a cada fila (población)
+# Excluir la primera columna (Poblacion) y la última columna (n_especies)
+indices_shannon <- apply(datos_poblacion[, 2:(ncol(datos_poblacion)-1)], 1, shannonH)
+
+# Mostrar los resultados
+resultados <- data.frame(Población = datos_poblacion$Poblacion, Shannon = indices_shannon)
+print(resultados)
+#Cálculo de índice de Pielou
+mi_pielou <- function(abundances){
+  shannonH(abundances)/log(length(abundances))
+}
+
+indices_pielou <- apply(datos_poblacion[, 2:(ncol(datos_poblacion)-1)], 1, mi_pielou)
+
+resultado_pielou <- data.frame(Población = datos_poblacion$Poblacion, Pielou = indices_pielou)
+print(resultado_pielou)
+
+
+#Cálculo de índice de Simpson
+SimpsonI <- function(abundances){
+  prob <- abundances/sum(abundances)
+  sum(prob*prob)
+}
+indices_simpson <- apply(datos_poblacion[, 2:(ncol(datos_poblacion)-1)], 1, SimpsonI)
+
+resultado_simpson <- data.frame(Población = datos_poblacion$Poblacion, Simpson = indices_simpson)
+print(resultado_simpson)
+
+
+#Cálculo de índice de Simpson Inverso 
+SimpsonInverse <- function(abundances){
+  prob <- abundances/sum(abundances)
+  1 - sum(prob^2)
+}
+indices_simpsoninv <- apply(datos_poblacion[, 2:(ncol(datos_poblacion)-1)], 1, SimpsonInverse)
+
+resultado_simpsoninv <- data.frame(Población = datos_poblacion$Poblacion, SimpsonInverso = indices_simpsoninv)
+print(resultado_simpsoninv)
+
+#Cálculo de índice de Gini
+GiniI <- function(abundances) {
+  abundances <- abundances[abundances > 0]  
+  n <- length(abundances)  
+  abundances <- sort(abundances)  
+  gini <- sum((2 * 1:n - n - 1) * abundances) / (n * sum(abundances))  # Fórmula simplificada
+  return(gini)
+}
+indices_gini <- apply(datos_poblacion[, 2:(ncol(datos_poblacion)-1)], 1, GiniI)
+
+resultados_gini <- data.frame(Población = datos_poblacion$Poblacion, Gini = indices_gini)
+print(resultados_gini)
+
+#Cálculo de índice de Chao1
+
+Chao1 <- function(abundances) {
+  abundances <- abundances[abundances > 0]  
+  S_obs <- length(abundances)  # Número de especies observadas
+  F1 <- sum(abundances == 1)  # Número de singletons (especies con abundancia 1)
+  F2 <- sum(abundances == 2)  # Número de doubletons (especies con abundancia 2)
+  
+  # Calcular el índice de Chao1
+  if (F2 == 0) {
+    chao1 <- S_obs + (F1 * (F1 - 1)) / 2  # Sirve para evitar división por 0
+  } else {
+    chao1 <- S_obs + (F1^2) / (2 * F2)  # Fórmula normal de Chao1
+  }
+  
+  return(chao1)
+}
+
+indices_chao1 <- apply(datos_poblacion[, 2:(ncol(datos_poblacion)-1)], 1, Chao1)
+resultado_chao1 <- data.frame(Población = datos_poblacion$Poblacion, Chao1 = indices_chao1)
+print(resultado_chao1)
+```
 
 ## Gráfica de abundancias y Curva de rarefacción
 
@@ -107,12 +211,12 @@ Curva_rarefaccion
 
 ## Preguntas
 
-1.  ¿Cómo varían los valores de los índices entre los sitios? ¿Qué diferencias resaltan?
-2.  ¿Cuál índice es más sensible a especies raras?
-3.  ¿Por qué el índice de Pielou nos da información sobre la equitatividad de la comunidad?
+1.  ¿Cómo varían los valores de los índices entre los sitios? ¿Qué diferencias resaltan? Los índices nos muestran que las poblaciones P3 y P5 tienen baja diversidad y equitatividad, en cambio P6 y P7 tiene mayor diversidad y equitatividad.
+2.  ¿Cuál índice es más sensible a especies raras? Es el índice de Chao ya que este nos sirve para estimar riquezas de especies incluyendo aquellas que no se observan en el muestreom en donde utiliza a los singltons y doubletons para hacer esta estimación, y est eíndice aumenta cuando hay más especies raras.
+3.  ¿Por qué el índice de Pielou nos da información sobre la equitatividad de la comunidad? Porque este nos dice que si todas tienen la misma abundancia el índice será de 1 que es mayor equitatividad, si es cercano a 0 hayt baja equitatividad, donde una especie domina y las demás son raras. En nuestras poblaciones podemos ver que P3 y P5 solo hay una especie que domina, entonces el índice es cercano a 0, pero las poblaciones P6 y P7 hay una distribución más equitativa.
 4.  ¿Cuál sitio parece tener mayor diversidad según la curva de rarefacción? la poblacion 6 y 7¿Por que sus curvas son más altas que las demás, siendo que se detectó un mayor número de especies en dichas poblaciones.
 5.  ¿Cómo afecta el tamaño de la muestra en la forma de la curva? En que a mayor población es más probable encontrar diversas especies, por lo que la curva sería más alta y grande; sin embargo, hay casos en los que una población grande contiene puros individuos de la misma especie.
-6.  ¿Cuál de estos índices es más sensible a la diferencia en abundancias?
+6.  ¿Cuál de estos índices es más sensible a la diferencia en abundancias? Sería el índice de Gini ya que este mide desigualdades entre la distribución de abundancias de especie, si una o pocas especeis son dominantes en una población, el ídnice es cercano a 1 pero si las abundancias están distribuidas de manera más equitativa, el índice de gini es cercano a 0. Por ejemplo nuestra población de P3 y P5 sólo domina una especie, que esto es un caso extremo.
 7.  ¿Qué interpretación ecológica tienen las diferencias entre sitios? Significa que son sitios con alta diversidad alfa, sin embargo, al comparar distintas poblaciones, se puede observar que al compartir especies, su diversidad beta sería menor.
 8.  ¿Cómo interpretas la forma de las curvas de abundancia?En que al inicio de las curvas se puede esperar una alta probabilidad de encontrar especies nuevas, por lo que su altura subiría rápidamente; sin embargo, al realizar los suficientes muestreos, las curvas se empiezan a asentar debido a la ausencia de más especies, dado por probabilidad de no haberlas muestreado o porque de verdad no hay más.
 9.  ¿Qué implicaciones tienen para la dominancia de especies?
