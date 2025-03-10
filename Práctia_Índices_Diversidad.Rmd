@@ -82,7 +82,7 @@ Aquí se muestra el código que se utilizó para la generación de las curvas de
 
 ```{r}
 #Colores a utilizar
-colores2<-c("cyan","pink","orange","steelblue","green","red","salmon","purple")
+colores2<-c("cyan","pink","orange","steelblue","green","red", "purple")
 #Generar curva de rarefaccion usando funcion de vegan para asi obtener los datos necesarios
 rarefaccion<-rarecurve(Datos_grafica_wenos, col=colores2, label=FALSE)
 
