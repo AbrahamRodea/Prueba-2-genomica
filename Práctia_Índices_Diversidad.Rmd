@@ -15,9 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 10/03/2025
 
-Isaac Abraham Rodea Trejo
-Andres Emiliano Chavez Ramos
-Luis Alfredo Hernandez Chapa
+Isaac Abraham Rodea Trejo Andres Emiliano Chavez Ramos Luis Alfredo Hernandez Chapa
 
 ### Introducción
 
@@ -212,7 +210,7 @@ Curva_rarefaccion<-ggplot(Datos_rarefaccion, aes(x = Tamaño, y = Especies, colo
 Curva_rarefaccion
 ```
 
-### Indices Beta 
+### Indices Beta
 
 Los indices beta nos ayudan a comparar la diversidad entre dos poblaciones. En este caso generamos funciones para los indices de Jaccard y Bray-Curtis. Los indices están diseñados para adaptarse a los datos de usuario.
 
@@ -367,9 +365,10 @@ Bray_curtis()
 
     En que al analizar comunidades se pueden aplicar los mismos procedimientos realizados para encontrar sus diversidades, gráfica y curvas, lo que nos proporcionaría datos reales de cómo es que esa comunidad está compuesta.
 
-### Discusión 
+### Discusión
 
 En esta práctica aprendí a escribir codigo en R para calcular distintos indices de diversidad, la simulación de un muestreo en poblaciones resultó bastante util para comprender como funciona cada indice. Al comparar los resultados entre distintos indices de las mismas poblaciones se pueden apreciar las diferencias entre los mismos. En lo personal la diferencia que más note fue aquella entre le indice de Jaccard y el de Bray-Curtis, puesto que el primero iguala dos poblaciones debido a que tienen el mismo valor de riqueza. Si alguien observa esto sin conocer como funciona el indice podría pensar que las poblaciones 6 y 7 son iguales cuando en realidad estos es falso. Comprender como funcionan los indices así como los datos que utilizan es vital para poder compren los resultados que arrojan y determinar en que situción debemos usar uno u otro indice.
+
 La práctica también nos permitió conocer cómo es que se pueden generar maneras de observar distintos conjuntos valores importantes al obtener datos de una muestra ecologica y en base a esos mismos datos poder generar representaciones visuales de abundancia y rarefacción, permitiéndonos no solo el saber hacerlas, sino también interpretarlas de manera correcta y así poder inferir correctamente en su significado ecologico.
 
 Para realizar el código de la presente práctica se consultaron diversos foros de R
@@ -377,9 +376,12 @@ Para realizar el código de la presente práctica se consultaron diversos foros 
 Trabajo del equipo
 
 Introducción e indices beta \<- Isaac Abraham Rodea Trejo
+
 Indices alfa y preguntas \<-Luis Alfredo Hernandez Chapa
+
 Grafica, curvas, preguntas y discusión \<-Andres Emiliano Chavez Ramos
-Discusión y preguntas\<- Isaac Abraham Rodea Trejo,
+
+Discusión y preguntas\<- Isaac Abraham Rodea Trejo
 
 ### Bibliografía
 
