@@ -2,6 +2,7 @@
 library(vegan)
 library(readr)
 library(ggplot2)
+library(dplyr)
 
 #Grafica de abundancia y curva de rarefaccion
 #Lectura de los datos necesarios (archivo CSV)
